@@ -1,10 +1,5 @@
 import TreeViewJS from "./core/TreeViewJS.js";
 
-
-window.onmousemove = (e) => {
-    //console.log(e.clientY)
-}
-
 new TreeViewJS('treeview-js', [
     {
         'text' : 'home',

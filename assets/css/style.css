@@ -16,10 +16,10 @@ body {
     flex: 1;
     padding: 16px;
     cursor: pointer;
-    transition: all .2s ease;
     user-select: none;
     font-size: 18px;
     text-transform: capitalize;
+    -webkit-user-drag: none;
 }
 
 .treeviewjs .insertable {
@@ -32,11 +32,17 @@ body {
 }
 
 .treeviewjs .insertable.show {
+    height: 20px;
     display: block;
-    height: 1px;
+    transition: all .2s ease;
+}
+
+.treeviewjs .insertable.show:hover {
+    height: 50px;
 }
 
 .treeviewjs .treeviewjs-item.dragged {
-    opacity: .5;
+    opacity: .4;
+    z-index: -1;
     transition: opacity .2s ease;
 }

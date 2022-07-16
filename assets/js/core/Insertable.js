@@ -6,8 +6,9 @@ export default class Insertable {
     constructor(insert_id, level) {
         this._node = null;
         this._level = level;
-        this._dom = this.build();
         this._token = 'insert-' + Node.createTokenFromValue(insert_id);
+        this._dom = this.build();
+        this.handle();
     }
 
     build() {
@@ -23,16 +24,13 @@ export default class Insertable {
     }
 
     handle() {
-        document.addEventListener('mousemove', (e) => {
-            console.log("paege ".e.clientX)
-
-           if(e.clientX >= this.dom.offsetLeft && e.clientX <= this.dom.offsetLeft + 20 &&
-           e.clientY >= this.dom.offsetTop && e.clientY <= this.dom.offsetTop + 10){
-               this.dom.style.height = 40 + 'px';
-           } else {
-
-           }
+        this._dom.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            alert(this._token);
         });
+        this.dom.onclick = (e) => {
+            console.log(this.dom.offsetTop);
+        }
     }
 
     get level() {

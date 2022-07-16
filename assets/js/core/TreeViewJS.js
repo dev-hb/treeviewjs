@@ -14,11 +14,22 @@ export default class TreeViewJS {
         }
 
         // release the drag effect from a node on mouse up over all the page
-        document.onmouseup = () => {
+        document.onmouseup = (e) => {
             this.nodes.map(node => {
                 node._dom.classList.remove("dragged");
             });
         }
+
+            document.onmousemove = (e) => {
+                e.preventDefault();
+                [... document.getElementsByClassName('insertable')].map(insertable => {
+                    if(e.clientY >= insertable.offsetTop - 10 && e.clientY <= insertable.offsetTop + 20){
+                        insertable.classList.add('show');
+                    }else{
+                        insertable.classList.remove('show');
+                    }
+                });
+            }
 
         // Read and parse Json to Nodes
         this.nodes = this.loadNodesFromJSON(data_json, 0);
@@ -31,7 +42,7 @@ export default class TreeViewJS {
         // For each element found on the json add them to nodes list
         // and set their level on the tree
         data_json.map(object => {
-            nodes.push(new Node(object.text, level));
+            nodes.push(new Node(this._element, object.text, level));
             if(object.children.length > 0) {
                 nodes.push(... this.loadNodesFromJSON(object.children, level+1));
             }
@@ -57,10 +68,13 @@ export default class TreeViewJS {
     }
 
     static reRender() {
+        // For each node from DOM, re-adjust horizontal indentation
         [... document.getElementsByClassName('treeviewjs-item')].map(elem => {
-           elem.style.marginLeft = Math.floor(parseInt(elem.style.marginLeft) / Node.INDENT) * Node.INDENT + 'px';
+           if(parseInt(elem.style.marginLeft) < 0) elem.style.marginLeft = '0px';
+           else{
+               elem.style.marginLeft = Math.floor(parseInt(elem.style.marginLeft) / Node.INDENT) * Node.INDENT + 'px';
+           }
         });
-        console.log("re-rendered");
     }
 
     get element() {
