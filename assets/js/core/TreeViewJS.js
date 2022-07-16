@@ -1,5 +1,6 @@
 import TreeViewException from "./TreeViewException.js";
 import Node from "./Node.js";
+import Insertable from "./Insertable.js";
 
 export default class TreeViewJS {
 
@@ -21,6 +22,7 @@ export default class TreeViewJS {
 
         // Read and parse Json to Nodes
         this.nodes = this.loadNodesFromJSON(data_json, 0);
+        this.loadInsertableAreas(); // Load all insertable areas for each node
         this.draw(); // Draw the tree with specific indentation structure
     }
 
@@ -37,11 +39,28 @@ export default class TreeViewJS {
         return nodes;
     }
 
+    loadInsertableAreas() {
+        let new_nodes = [];
+        this.nodes.map((node, key) => {
+            new_nodes.push(new Insertable('t-' + node.token, node.level));
+            new_nodes.push(node);
+            new_nodes.push(new Insertable('b-' + node.token, node.level));
+        });
+        this.nodes = new_nodes;
+    }
+
     draw(){
         // draw the HTML elements
         this.nodes.map(nodeOrArray => {
             this._element.appendChild(nodeOrArray._dom);
         });
+    }
+
+    static reRender() {
+        [... document.getElementsByClassName('treeviewjs-item')].map(elem => {
+           elem.style.marginLeft = Math.floor(parseInt(elem.style.marginLeft) / Node.INDENT) * Node.INDENT + 'px';
+        });
+        console.log("re-rendered");
     }
 
     get element() {

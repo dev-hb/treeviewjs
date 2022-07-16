@@ -24,6 +24,15 @@ body {
 
 .treeviewjs .insertable {
     width: 100%;
+    height: 0px;
+    background-color: orange;
+    opacity: .2;
+    display: none;
+    transition: all .2s ease;
+}
+
+.treeviewjs .insertable.show {
+    display: block;
     height: 1px;
 }
 

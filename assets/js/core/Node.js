@@ -1,7 +1,8 @@
 import TreeViewException from "./TreeViewException.js";
+import TreeViewJS from "./TreeViewJS.js";
 
 export default class Node {
-
+    static REF = 'node';
     static INDENT = 50;
 
     constructor(value, level) {
@@ -10,7 +11,7 @@ export default class Node {
         this._value = value;
         if (value == undefined) throw new TreeViewException("Json is invalid");
         this._dom = this.build();
-        this._token = this.createTokenFromValue(value);
+        this._token = Node.createTokenFromValue(value);
         this._is_dragged = false;
     }
 
@@ -27,9 +28,17 @@ export default class Node {
         elem.onmouseup = () => {
             elem.classList.remove("dragged");
             this._is_dragged = false;
+            [... document.getElementsByClassName('insertable')].map(insertable => {
+                insertable.classList.remove('show');
+            });
+            // Force re-rendering DOM elements
+            TreeViewJS.reRender();
         }
         elem.onmousemove = (e) => {
             if(this._is_dragged) {
+                [... document.getElementsByClassName('insertable')].map(insertable => {
+                   // insertable.classList.add('show');
+                });
                 elem.style.marginLeft = e.clientX - 100 + 'px';
                 //elem.style.marginTop = e.clientY - 150 + 'px';
                 console.log(elem.style.marginTop);
@@ -58,7 +67,7 @@ export default class Node {
         return this._token;
     }
 
-    createTokenFromValue(value) {
-        return this.value.toLowerCase();
+    static createTokenFromValue(value) {
+        return value.toLowerCase();
     }
 }
